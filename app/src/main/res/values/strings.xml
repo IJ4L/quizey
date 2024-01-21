@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Quezy</string>
+    <string name="queezy">Queezy</string>
+    <string name="open_title">Ambil dan Jelajahi Tantangan</string>
+    <string name="open_title_2">Bersama Temanmu</string>
+    <string name="login">Login with Google</string>
+    <string name="image">img</string>
+    <string name="greeting">Hello, welcome!</string>
+    <string name="username">John Doe</string>
+    <string name="profile">Profile</string>
+    <string name="google_web_client_id">YOUR_WEB_CLIENT_ID</string>
+</resources>

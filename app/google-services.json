@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1041071002345",
+    "project_id": "quezy-fb7cc",
+    "storage_bucket": "quezy-fb7cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041071002345:android:ccf8baeddf926fd5799678",
+        "android_client_info": {
+          "package_name": "com.example.quizey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNGEtVDjp7zGFibs6Rk_0bvasd3BIBMNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

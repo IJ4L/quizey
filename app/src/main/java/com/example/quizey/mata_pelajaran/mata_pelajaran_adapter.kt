@@ -4,9 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizey.R
+import com.squareup.picasso.Picasso
 
 class RecyclerViewAdapter(
     private val courseDataArrayList: ArrayList<RecyclerDataMapel>,
@@ -24,7 +26,7 @@ class RecyclerViewAdapter(
         val recyclerData = courseDataArrayList[position]
 
         holder.courseTV.text = recyclerData.title
-//        holder.courseIV.setImageResource(recyclerData.imgid)
+        Picasso.get().load(recyclerData.imgid).into(holder.courseIV)
     }
 
     override fun getItemCount(): Int {
@@ -33,6 +35,6 @@ class RecyclerViewAdapter(
 
     inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val courseTV: TextView = itemView.findViewById<TextView>(R.id.idTVCourse)
-//        val courseIV: ImageView = itemView.findViewById<ImageView>(R.id.idIVcourseIV)
+        val courseIV: ImageView = itemView.findViewById<ImageView>(R.id.idIVcourseIV)
     }
 }

@@ -20,5 +20,5 @@ interface ApiService {
     fun getCoursesData(
         @Query("major_name") majorName: String,
         @Query("user_email") userEmail: String
-    ): Call<ApiResponse>
+    ): Call<com.example.quizey.model.ApiResponse>
 }

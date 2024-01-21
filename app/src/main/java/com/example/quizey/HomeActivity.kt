@@ -1,63 +1,63 @@
 package com.example.quizey
 
 import RetrofitClient
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizey.mata_pelajaran.RecyclerDataMapel
 import com.example.quizey.mata_pelajaran.RecyclerViewAdapter
-import com.example.quizey.model.ApiResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.await
 
 class HomeActivity : AppCompatActivity() {
-
     private var recyclerView: RecyclerView? = null
-    private var recyclerDataArrayList: ArrayList<RecyclerDataMapel>? = null
+    private var recyclerDataArrayList = ArrayList<RecyclerDataMapel>()
     private lateinit var apiService: ApiService
+    private lateinit var adapter: RecyclerViewAdapter
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         recyclerView = findViewById(R.id.idCourseRV)
-        recyclerDataArrayList = ArrayList()
+        adapter = RecyclerViewAdapter(recyclerDataArrayList, this)
 
         apiService = RetrofitClient.retrofit.create(ApiService::class.java)
 
-        apiService.getCoursesData("IPS", "alitopan@widyaedu.com").enqueue(object : Callback<ApiResponse> {
-            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                if (response.isSuccessful) {
-                    val data = response.body()?.data
-                    if (data != null) {
-                        val recyclerDataList = data.map { course ->
-                            RecyclerDataMapel(course.course_name, course.course_id.toInt())
-                        }
-                        recyclerDataArrayList?.addAll(recyclerDataList)
-
-                        // Display data in RecyclerView
-                        setupRecyclerView()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                // Handle API call failure
-            }
-        })
-    }
-
-    private fun setupRecyclerView() {
-        val adapter = RecyclerViewAdapter(recyclerDataArrayList ?: ArrayList(), this)
-        val layoutManager = GridLayoutManager(this, 2)
-
-        recyclerView?.layoutManager = layoutManager
         recyclerView?.adapter = adapter
-    }
-}
+        recyclerView?.layoutManager = GridLayoutManager(this, 2)
 
-private fun <T> Call<T>.enqueue(apiResponseCallback: Callback<ApiResponse>) {
-    TODO("Not yet implemented")
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val response = apiService.getCoursesData("IPS", "alitopan@widyaedu.com").await()
+
+                if (response.message == "ok") {
+                    val data = response.data
+
+                    recyclerDataArrayList.clear()
+                    recyclerDataArrayList.addAll(data.map { course ->
+                        RecyclerDataMapel(course.course_name, course.url_cover)
+                    })
+
+                    for (item in recyclerDataArrayList) {
+                        Log.i("HomeActivity", "Course Name: ${item.title}, Course ID: ${item.imgid}")
+                    }
+
+                    adapter.notifyDataSetChanged()
+                } else {
+
+                    Log.e("HomeActivity", "API Error: ${response.status}")
+                }
+            } catch (e: Exception) {
+                Log.e("HomeActivity", "Exception: ${e.message}")
+                e.printStackTrace()
+            }
+        }
+    }
 }

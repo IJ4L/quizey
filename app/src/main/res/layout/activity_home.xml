@@ -40,14 +40,6 @@
             android:textSize="20sp"
             android:textColor="@color/white"/>
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/image_circular"
-            android:contentDescription="@string/profile" />
-
         <com.google.android.material.circularreveal.cardview.CircularRevealCardView
             android:id="@id/info"
             android:layout_width="match_parent"

@@ -21,3 +21,20 @@ data class RecyclerDataMapel(
     val courseName: String,
     val courseId: Int
 )
+
+
+data class ExerciseResponse(
+    val status: Int,
+    val message: String,
+    val data: List<ExerciseItem>
+)
+
+data class ExerciseItem(
+    val exercise_id: String,
+    val exercise_title: String,
+    val access_type: String,
+    val icon: String,
+    val exercise_user_status: String,
+    val jumlah_soal: String,
+    val jumlah_done: Int
+)

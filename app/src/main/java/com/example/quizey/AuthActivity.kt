@@ -71,7 +71,10 @@ class AuthActivity : AppCompatActivity() {
                         if (response.isSuccessful) {
                             val userData = response.body()
                             if (userData!!.userId != "0") {
-                                val intent = Intent(this@AuthActivity, HomeActivity::class.java)
+                                var intent = Intent(this@AuthActivity, HomeActivity::class.java)
+                                println(account.displayName)
+                                intent.putExtra("NAME_KEY", account.displayName)
+                                intent.putExtra("EMAIL_KEY", account.email)
                                 startActivity(intent)
                                 finish()
                             } else {
@@ -123,7 +126,8 @@ class AuthActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
                     if (apiResponse?.status == 1) {
-                        val intent = Intent(this@AuthActivity, HomeActivity::class.java)
+                        var intent = Intent(this@AuthActivity, HomeActivity::class.java)
+                        intent.putExtra("EMAIL_KEY", registrationData.email)
                         startActivity(intent)
                         finish()
                     } else {

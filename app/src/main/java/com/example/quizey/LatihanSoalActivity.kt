@@ -1,26 +1,24 @@
 package com.example.quizey
 
-import RecyclerViewAdapter
 import RetrofitClient
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizey.mata_pelajaran.RecyclerDataMapel
+import com.example.quizey.latihan_soal.RecyclerLatihanSoal
+import com.example.quizey.latihan_soal.RecyclerViewAdapterSoal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.await
 
-class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
+class LatihanSoalActivity : AppCompatActivity() {
     private var recyclerView: RecyclerView? = null
-    private var recyclerDataArrayList = ArrayList<RecyclerDataMapel>()
+    private var recyclerDataArrayList = ArrayList<RecyclerLatihanSoal>()
     private lateinit var apiService: ApiService
-    private lateinit var adapter: RecyclerViewAdapter
-    private lateinit var username : TextView
+    private lateinit var adapter: RecyclerViewAdapterSoal
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,29 +26,26 @@ class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         setContentView(R.layout.activity_home)
 
         val email = intent.getStringExtra("EMAIL_KEY")
-        val name = intent.getStringExtra("NAME_KEY")
+        val mapel_id = intent.getStringExtra("MAPEL_ID")
 
         recyclerView = findViewById(R.id.idCourseRV)
-        adapter = RecyclerViewAdapter(recyclerDataArrayList, this, this)
+        adapter = RecyclerViewAdapterSoal(recyclerDataArrayList, this)
 
         apiService = RetrofitClient.retrofit.create(ApiService::class.java)
 
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = GridLayoutManager(this, 2)
 
-        username = findViewById(R.id.username)
-        username.text = name
-
         lifecycleScope.launch(Dispatchers.Main) {
             try {
-                val response = apiService.getCoursesData("IPS", email!!).await()
+                val response = apiService.getExerciseData(mapel_id!!, email!!).await()
 
                 if (response.message == "ok") {
                     val data = response.data
 
                     recyclerDataArrayList.clear()
                     recyclerDataArrayList.addAll(data.map { course ->
-                        RecyclerDataMapel(course.course_name, course.url_cover, course.course_id, email)
+                        RecyclerLatihanSoal(course.exercise_title, course.icon, course.exercise_id)
                     })
 
                     for (item in recyclerDataArrayList) {
@@ -68,9 +63,4 @@ class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
             }
         }
     }
-
-    override fun onItemClick(position: Int) {
-        
-    }
 }
-

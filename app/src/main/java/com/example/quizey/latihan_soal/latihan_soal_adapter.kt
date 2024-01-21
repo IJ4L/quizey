@@ -1,27 +1,20 @@
+package com.example.quizey.latihan_soal
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizey.HomeActivity
-import com.example.quizey.LatihanSoalActivity
 import com.example.quizey.R
-import com.example.quizey.mata_pelajaran.RecyclerDataMapel
 import com.squareup.picasso.Picasso
 
-class RecyclerViewAdapter(
-    private val courseDataArrayList: ArrayList<RecyclerDataMapel>,
-    private val mcontext: Context,
-    private val onItemClickListener: HomeActivity
-) : RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>() {
-
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
+class RecyclerViewAdapterSoal(
+    private val courseDataArrayList: ArrayList<RecyclerLatihanSoal>,
+    private val mcontext: Context
+) :
+    RecyclerView.Adapter<RecyclerViewAdapterSoal.RecyclerViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
         val view: View =
@@ -34,14 +27,8 @@ class RecyclerViewAdapter(
 
         holder.courseTV.text = recyclerData.title
         Picasso.get().load(recyclerData.imgid).into(holder.courseIV)
-
-        holder.itemView.setOnClickListener {
-            val intent = Intent(mcontext, LatihanSoalActivity::class.java)
-            intent.putExtra("MAPEL_ID", recyclerData.idMapel)
-            intent.putExtra("EMAIL_KEY", recyclerData.email)
-            mcontext.startActivity(intent)
-        }
     }
+
     override fun getItemCount(): Int {
         return courseDataArrayList.size
     }

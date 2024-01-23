@@ -1,16 +1,17 @@
-package com.example.quizey
+package com.example.quizey.mata_pelajaran
 
 import RecyclerViewAdapter
-import RetrofitClient
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizey.mata_pelajaran.RecyclerDataMapel
+import com.example.quizey.R
+import com.example.quizey.api_service.ApiService
+import com.example.quizey.api_service.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.await
@@ -20,7 +21,7 @@ class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     private var recyclerDataArrayList = ArrayList<RecyclerDataMapel>()
     private lateinit var apiService: ApiService
     private lateinit var adapter: RecyclerViewAdapter
-    private lateinit var username : TextView
+    private lateinit var username: TextView
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +37,10 @@ class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         apiService = RetrofitClient.retrofit.create(ApiService::class.java)
 
         recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = GridLayoutManager(this, 2)
+        recyclerView?.layoutManager = LinearLayoutManager(this)
 
         username = findViewById(R.id.username)
-        username.text = name
+        username.text = email
 
         lifecycleScope.launch(Dispatchers.Main) {
             try {
@@ -50,7 +51,7 @@ class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
                     recyclerDataArrayList.clear()
                     recyclerDataArrayList.addAll(data.map { course ->
-                        RecyclerDataMapel(course.course_name, course.url_cover, course.course_id, email)
+                        RecyclerDataMapel(course.course_name, course.url_cover, course.course_id, email, course.jumlah_done, course.jumlah_materi)
                     })
 
                     for (item in recyclerDataArrayList) {
@@ -59,7 +60,6 @@ class HomeActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
                     adapter.notifyDataSetChanged()
                 } else {
-
                     Log.e("HomeActivity", "API Error: ${response.status}")
                 }
             } catch (e: Exception) {

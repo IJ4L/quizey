@@ -2,7 +2,6 @@ package com.example.quizey
 
 import ApiResponse
 import RegistrationData
-import RetrofitClient
 import UserData
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,9 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.quizey.api_service.ApiService
+import com.example.quizey.api_service.RetrofitClient
+import com.example.quizey.mata_pelajaran.HomeActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -71,7 +73,7 @@ class AuthActivity : AppCompatActivity() {
                         if (response.isSuccessful) {
                             val userData = response.body()
                             if (userData!!.userId != "0") {
-                                var intent = Intent(this@AuthActivity, HomeActivity::class.java)
+                                val intent = Intent(this@AuthActivity, HomeActivity::class.java)
                                 println(account.displayName)
                                 intent.putExtra("NAME_KEY", account.displayName)
                                 intent.putExtra("EMAIL_KEY", account.email)
@@ -126,7 +128,7 @@ class AuthActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
                     if (apiResponse?.status == 1) {
-                        var intent = Intent(this@AuthActivity, HomeActivity::class.java)
+                        val intent = Intent(this@AuthActivity, HomeActivity::class.java)
                         intent.putExtra("EMAIL_KEY", registrationData.email)
                         startActivity(intent)
                         finish()

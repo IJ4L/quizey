@@ -1,15 +1,16 @@
-package com.example.quizey
+package com.example.quizey.latihan_soal
 
-import RetrofitClient
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizey.latihan_soal.RecyclerLatihanSoal
-import com.example.quizey.latihan_soal.RecyclerViewAdapterSoal
+import com.example.quizey.R
+import com.example.quizey.api_service.ApiService
+import com.example.quizey.api_service.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.await
@@ -23,13 +24,22 @@ class LatihanSoalActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_latihan_soal)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        toolbar.navigationIcon?.setTint(resources.getColor(android.R.color.white, theme))
+        toolbar.title = ""
 
         val email = intent.getStringExtra("EMAIL_KEY")
         val mapel_id = intent.getStringExtra("MAPEL_ID")
 
-        recyclerView = findViewById(R.id.idCourseRV)
-        adapter = RecyclerViewAdapterSoal(recyclerDataArrayList, this)
+        recyclerView = findViewById(R.id.latsol)
+        adapter = RecyclerViewAdapterSoal(recyclerDataArrayList, this, this)
 
         apiService = RetrofitClient.retrofit.create(ApiService::class.java)
 
@@ -45,7 +55,7 @@ class LatihanSoalActivity : AppCompatActivity() {
 
                     recyclerDataArrayList.clear()
                     recyclerDataArrayList.addAll(data.map { course ->
-                        RecyclerLatihanSoal(course.exercise_title, course.icon, course.exercise_id)
+                        RecyclerLatihanSoal(course.exercise_title, course.icon, course.exercise_id, course.jumlah_soal, course.jumlah_done, email)
                     })
 
                     for (item in recyclerDataArrayList) {
@@ -62,5 +72,10 @@ class LatihanSoalActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
